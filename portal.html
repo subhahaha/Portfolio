@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+  <title>Login | Subha Maharjan</title>
+  
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+</head>
+<body>
+    
+<div id="auth-container" class="glass-box">
+  
+  <div id="login-box">
+    <h2>Welcome Back</h2>
+    <input type="email" id="logEmail" placeholder="Email">
+    <input type="password" id="logPassword" placeholder="Password">
+    <button onclick="handleLogin()">Login</button>
+    <p>Need an account? <a href="#" onclick="showRegister()">Register here</a></p>
+  </div>
+
+  <div id="register-box" style="display: none;">
+    <h2>Create Account</h2>
+    <input type="text" id="regFullName" placeholder="Full Name">
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Password">
+    <input type="password" id="regConfirmPassword" placeholder="Confirm Password">
+    <button onclick="handleRegister()">Register</button>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
+  </div>
+</div>
+
+<div id="dashboard" class="glass-box" style="display: none;">
+  <h2>Welcome!</h2>
+  <button onclick="handleLogout()">Logout</button>
+</div>
+
+    
+
+  <script>
+    // 1. Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzjRJl1SdP5EGQYstj2-8_J0Uafon8ttA",
+      authDomain: "portfolio-sm-7a9c0.firebaseapp.com",
+      projectId: "portfolio-sm-7a9c0",
+      storageBucket: "portfolio-sm-7a9c0.firebasestorage.app",
+      messagingSenderId: "894371020362",
+      appId: "1:894371020362:web:b582b99c75f4cec2dfb0b3",
+      measurementId: "G-MZL1RXWBBW"
+    };
+
+    // 2. Initialize Firebase and Auth
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // 3. Logic functions
+   
+  
+
+// Function to handle Registration
+function handleRegister() {
+  const fullName = document.getElementById('regFullName').value;
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPassword').value;
+  const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+  // 1. Check if Full Name is empty
+  if (fullName.trim() === "") {
+    alert("Please enter your full name.");
+    return;
+  }
+
+  // 2. Password Pattern Validation
+  const passwordPattern = /^(?=.*[A-Za-z])(?=.*[!@#$%^&*]).{6,}$/;
+  if (!passwordPattern.test(password)) {
+    alert("Password must contain at least one letter, one special symbol, and be 6+ characters long.");
+    return;
+  }
+
+  // 3. Confirm Password Match
+  if (password !== confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  // If all pass, proceed to Firebase
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+        // 1. Send the link
+        userCredential.user.sendEmailVerification();
+        
+        // 2. IMPORTANT: Force logout immediately
+        auth.signOut();
+        
+        alert("Registration successful! Please check your email and click the verification link before logging in.");
+        
+        // 3. Take them to the login screen
+        showLogin();
+    })
+    .catch((error) => alert("Error: " + error.message));
+}
+// Function to handle Login
+// function handleLogin() {
+//   const email = document.getElementById('logEmail').value;
+//   const password = document.getElementById('logPassword').value;
+
+//   auth.signInWithEmailAndPassword(email, password)
+//     .then((userCredential) => {
+//       const user = userCredential.user;
+      
+//       // The "Bouncer" Logic
+//       if (!user.emailVerified) {
+//         alert("Your email is not verified yet. Please check your inbox!");
+//         auth.signOut(); // Log them out
+//         return; // <--- THIS IS THE KEY: It stops the function here!
+//       }
+      
+//       // Only if they are verified will the code reach this point
+//       showDashboard();
+      
+//     })
+//     .catch((error) => alert("Login Error: " + error.message));
+// }
+
+  // Switch to Login view
+function showLogin() {
+  document.getElementById('register-box').style.display = 'none';
+  document.getElementById('login-box').style.display = 'block';
+}
+
+// Switch back to Register view
+
+function showRegister() {
+  document.getElementById('login-box').style.display = 'none';
+  document.getElementById('register-box').style.display = 'block';
+}
+
+// function showDashboard() {
+//   // Hide the container holding the forms
+//   document.getElementById('auth-container').style.display = 'none';
+//   // Show the dashboard
+//   document.getElementById('dashboard').style.display = 'block';
+// }
+
+function showDashboard() {
+  // Instead of hiding divs, we send the user to the portfolio file
+  window.location.href = "index.html";
+}
+
+function handleLogin() {
+  const email = document.getElementById('logEmail').value;
+  const password = document.getElementById('logPassword').value;
+  
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      alert("Login successful!");
+      showDashboard(); // Call the function to reveal the dashboard
+    })
+    .catch((error) => alert("Error: " + error.message));
+}
+
+function handleLogout() {
+  auth.signOut().then(() => {
+    alert("Logged out!");
+    location.reload(); // Simple way to reset the page
+  });
+}
+
+
+    
+  </script>
+
+</body>
+</html>

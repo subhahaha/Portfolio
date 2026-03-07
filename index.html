@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Portfolio</title>
+<link rel="stylesheet" href="library/font-awesome/css/all.min.css" />
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+  // Initialize the app (ensure this matches what you used in your login file)
+  const firebaseConfig = {
+      // Put your exact config here again
+      apiKey: "AIzaSyCzjRJl1SdP5EGQYstj2-8_J0Uafon8ttA",
+      authDomain: "portfolio-sm-7a9c0.firebaseapp.com",
+      projectId: "portfolio-sm-7a9c0",
+      storageBucket: "portfolio-sm-7a9c0.firebasestorage.app",
+      messagingSenderId: "894371020362",
+      appId: "1:894371020362:web:b582b99c75f4cec2dfb0b3"
+  };
+  
+  // Initialize Firebase
+  if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+  }
+
+  // The Logout Function
+  window.logoutUser = function() {
+    firebase.auth().signOut().then(() => {
+      // Redirect to your login file
+      window.location.href = "portal.html"; 
+    }).catch((error) => {
+      console.error("Logout error:", error);
+    });
+  };
+</script>
+
+
+<style>
+    
+html {
+  scroll-behavior: smooth;
+}
+
+/* body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+  background: #0f172a; 
+  color: #f8fafc;
+} */
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  margin: 0;
+  background: #F8FAFC; /* Soft Light Grey */
+  color: #334155; /* Soft Slate Text */
+}
+
+
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10%;
+  background: rgba(15, 23, 42, 0.8); /* Matches body with transparency */
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+nav h2 {
+  color: #8BBd77; /* Cozy Green */
+  font-weight: 700;
+}
+
+nav a {
+  color: #cbd5e1 !important;
+  transition: 0.3s;
+  margin-left:20px;
+}
+
+nav a:hover {
+  color: #8BBd77 !important;
+}
+.hero{
+text-align:center;
+padding:120px 20px;
+/* background:linear-gradient(135deg,#111111,#0d0d0d); */
+background-color: #90a4ef; /* Your specific Periwinkle Blue */
+color: white; /* White text looks crisp on this blue */
+clip-path: ellipse(150% 100% at 50% 0%);
+
+}
+
+.hero h1{
+font-size:45px;
+}
+
+.hero p{
+  font-size: 20px;
+}
+.section{
+padding:80px 10%;
+}
+
+.projects{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+}
+
+
+
+
+.login-btn {
+  background: #065f46; /* Deep Green */
+  color: white !important;
+  padding: 8px 22px;
+  border: 1px solid #4ade80;
+  border-radius: 50px; /* Pill shape is cozier */
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background: #4ade80;
+  color: #064e3b !important;
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
+}
+#skills{
+padding:100px 8%;
+text-align:center;
+}
+
+.skills-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:30px;
+margin-top:40px;
+}
+
+
+.skill-card {
+  background: rgba(59, 94, 149, 0.5);
+  border: 1px solid rgba(74, 222, 128, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  transition:0.3s;
+  color: white;
+}
+
+.skill-icon {
+  color: #4ade80; /* Icons now match the cozy green */
+}
+.skill-card:hover{
+transform:translateY(-8px);
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+
+
+.skill-card p{
+font-weight:600;
+}
+.card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #f1f5f9;
+  padding: 30px;
+  border-radius: 16px;
+  transition: 0.4s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  border-color: #09cf51;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
+}
+
+#contact a{
+text-decoration:none;
+margin-right:20px;
+font-size:28px;
+}
+
+#contact a:hover{
+opacity:0.7;
+}
+
+.contact-icons{
+margin-top:25px;
+}
+
+.contact-icons i{
+transition:0.3s;
+}
+
+.contact-icons i:hover{
+transform:scale(1.2);
+}
+
+footer {
+  background-color: #333; /* Dark background */
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 50px; /* Adds space between your last section and the footer */
+}
+
+footer p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<h2>My Portfolio</h2>
+
+<div>
+<a href="#skills">Skills</a>
+<a href="#projects">Projects</a>
+<a href="#" onclick="logoutUser()" class="login-btn">Logout</a>
+</div>
+</nav>
+
+
+
+<div class="hero">
+<h1>Hello, I'm Subha</h1>
+<p>Computer Engineering student passionate about Artificial Intelligence and Web Development.</p>
+</div>
+<section id="skills">
+  <h2 class="section-title">Skills</h2>
+
+  <div class="skills-grid">
+
+    <div class="skill-card">
+      <i class="fas fa-code skill-icon" style="font-size: 60px; color: #3776AB;"></i>
+      <p>C</p>
+    </div>
+
+    <div class="skill-card">
+      <i class="fas fa-laptop-code skill-icon" style="font-size: 60px; color: #3776AB;"></i>
+      <p>C++</p>
+    </div>
+
+    <div class="skill-card">
+      <i class="fab fa-python skill-icon" style="font-size: 60px; color: #3776AB;" ></i>
+       
+      <p>Python</p>
+    </div>
+
+    <div class="skill-card">
+      <i class="fab fa-js-square skill-icon" style="font-size: 60px; color: rgb(238, 238, 81);"></i>
+      <p>JavaScript</p>
+    </div>
+
+    <div class="skill-card">
+      <i class="fab fa-html5 skill-icon" style="font-size: 60px; color: #dc6621;"></i>
+      <p>HTML</p>
+    </div>
+
+    
+
+  </div>
+</section>
+<section class="section" id="projects">
+
+<h2>Projects</h2>
+
+<div class="projects">
+
+<div class="card">
+<h3>Movie Sentiment Analysis</h3>
+<p>Developed a sentiment analysis system that processes movie reviews and classifies their sentiment (positive, negative, or neutral) using Natural Language Processing and a BiLSTM deep learning model.</p>
+</div>
+
+
+
+<div class="card">
+<h3>Pet Recommendation System</h3>
+<p>A smart pet recommendation system that suggests pets based on user preferences using KNN and enables intelligent pet search through SBERT-based semantic similarity.</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="section" id="contact">
+
+<h2>Contact</h2>
+
+<p>You can connect with me through the following platforms.</p>
+
+<div class="contact-icons">
+
+<a href="https://github.com/subhahaha" target="_blank">
+<i class="fab fa-github"></i>
+</a>
+
+<a href="https://www.linkedin.com/in/subha-maharjan-47b533334/" target="_blank">
+<i class="fab fa-linkedin"></i>
+</a>
+
+<a href="mailto:maharjansubha7@gmail.com">
+<i class="fas fa-envelope"></i>
+</a>
+
+</div>
+
+</section>
+<footer>
+  <div class="footer-content">
+    
+    <p>Designed by Subha Maharjan | © 2026</p>
+  </div>
+</footer>
+
+</body>
+</html>
