@@ -8,31 +8,7 @@
 
 
 <script src="config.js"></script>
-<!-- <script>
-  
-  
-  // Initialize Firebase
-  if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-  }
 
-  // The Logout Function
-  window.logoutUser = function() {
-    firebase.auth().signOut().then(() => {
-      // Redirect to your login file
-      window.location.href = "portal.html"; 
-    }).catch((error) => {
-      console.error("Logout error:", error);
-    });
-  };
-
-  // This stays on index.html
-auth.onAuthStateChanged((user) => {
-    if (!user) {
-        // If the user logs out or isn't logged in, send them back
-        window.location.href = "portal.html";
-
-</script> -->
 <script>
   // 1. Initialize Firebase FIRST
   // Make sure to uncomment your config.js link in the <head>!
