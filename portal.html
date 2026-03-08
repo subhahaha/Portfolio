@@ -75,21 +75,21 @@ function handleRegister() {
     return;
   }
 
-  // If all pass, proceed to Firebase
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-        // 1. Send the link
-        userCredential.user.sendEmailVerification();
-        
-        // 2. IMPORTANT: Force logout immediately
-        auth.signOut();
-        
-        alert("Registration successful! Please check your email and click the verification link before logging in.");
-        
-        // 3. Take them to the login screen
-        showLogin();
-    })
-    .catch((error) => alert("Error: " + error.message));
+  
+
+auth.createUserWithEmailAndPassword(email, password)
+  .then(async (userCredential) => {
+      // Use 'await' to ensure the request is actually sent
+      await userCredential.user.sendEmailVerification();
+      
+      auth.signOut();
+      alert("Registration successful! Check your email for the verification link.");
+      showLogin();
+  })
+  .catch((error) => {
+      console.error("Verification error:", error); // Check console for details
+      alert("Error: " + error.message);
+  });
 }
 // Function to handle Login
 // function handleLogin() {
@@ -134,9 +134,17 @@ function showRegister() {
 //   document.getElementById('dashboard').style.display = 'block';
 // }
 
+// function showDashboard() {
+//   // Instead of hiding divs, we send the user to the portfolio file
+//   window.location.href = "index.html";
+// }
+// function showDashboard() {
+//     document.getElementById('auth-container').style.display = 'none';
+//     document.getElementById('dashboard').style.display = 'block';
+// }
+
 function showDashboard() {
-  // Instead of hiding divs, we send the user to the portfolio file
-  window.location.href = "index.html";
+    window.location.href = "index.html";
 }
 
 function handleLogin() {
@@ -158,7 +166,40 @@ function handleLogout() {
   });
 }
 
+// This listener acts as your global Gatekeeper
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // 1. Google users are pre-verified
+        if (user.providerData[0]?.providerId === 'google.com') {
+            showDashboard();
+            return;
+        }
 
+        // 2. Email/Password users MUST be verified
+        if (user.emailVerified) {
+            showDashboard();
+        } else {
+            // Optional: If they are not verified, log them out and alert them
+            auth.signOut();
+            alert("Please verify your email before logging in!");
+            showLogin();
+        }
+    } else {
+        // No user is logged in, stay on login/register screen
+        console.log("User is logged out");
+    }
+});
+
+// Update your handleLogin to be much simpler now
+function handleLogin() {
+    const email = document.getElementById('logEmail').value;
+    const password = document.getElementById('logPassword').value;
+    
+    auth.signInWithEmailAndPassword(email, password)
+        .catch((error) => alert("Error: " + error.message));
+        // Note: No need to call showDashboard() here anymore! 
+        // The onAuthStateChanged listener above will handle it automatically.
+}
 
     
   </script>

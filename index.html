@@ -8,7 +8,7 @@
 
 
 <script src="config.js"></script>
-<script>
+<!-- <script>
   
   
   // Initialize Firebase
@@ -25,8 +25,40 @@
       console.error("Logout error:", error);
     });
   };
-</script>
 
+  // This stays on index.html
+auth.onAuthStateChanged((user) => {
+    if (!user) {
+        // If the user logs out or isn't logged in, send them back
+        window.location.href = "portal.html";
+
+</script> -->
+<script>
+  // 1. Initialize Firebase FIRST
+  // Make sure to uncomment your config.js link in the <head>!
+  if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+  }
+
+  // 2. Define 'auth' GLOBALLY so the whole page can see it
+  const auth = firebase.auth();
+
+  // 3. Now define your functions
+  function handleLogout() {
+      auth.signOut().then(() => {
+          window.location.href = "portal.html"; 
+      }).catch((error) => {
+          alert("Logout error: " + error.message);
+      });
+  }
+
+  // 4. Finally, the listener
+  auth.onAuthStateChanged((user) => {
+      if (!user) {
+          window.location.href = "portal.html";
+      }
+  });
+</script>
 
 <style>
     
@@ -239,7 +271,7 @@ footer p {
 <a href="#about-me">About Me</a>
 <a href="#skills">Skills</a>
 <a href="#projects">Projects</a>
-<a href="#" onclick="logoutUser()" class="login-btn">Logout</a>
+<a href="#" onclick="handleLogout()" class="login-btn">Logout</a>
 </div>
 </nav>
 
@@ -350,6 +382,7 @@ footer p {
     <p>Designed by Subha Maharjan | © 2026</p>
   </div>
 </footer>
+
 
 </body>
 </html>
